@@ -11,8 +11,6 @@ def natural_sort(l):
 
 parser = argparse.ArgumentParser(description='PyTorch Tracking Demo')
 
-parser.add_argument('--config', dest='config', default='config_davis.json',
-                    help='hyper-parameter of SiamMask in json format')
 parser.add_argument('--base_path', default='video_frames/', help='datasets')
 parser.add_argument('--net_path', type = str, default='model.pth', help='network path')
 parser.add_argument('--object', nargs='*',action="store",help='set object region') ###### x,y,w,h x,y,w,h   || center, w,h
