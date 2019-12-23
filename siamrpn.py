@@ -293,7 +293,10 @@ class TrackerSiamRPN(Tracker):
         # self.center = np.clip(self.center, 0, image.shape[:2])
 
         # update scale
-        lr = response[:,best_id] * self.cfg.lr
+        pair_id = np.concatenate((np.arange(self.box_num).reshape((-1,1)), np.reshape(best_id, (-1,1))), axis = 1)
+        lr = response[pair_id[:,0],pair_id[:,1]] * self.cfg.lr
+        lr = np.reshape(lr,(-1,1))
+        #lr = response[:,best_id] * self.cfg.lr
         ######### llj
         self.target_sz = (1 - lr) * self.target_sz + lr * offset[:,3:1:-1]
         self.target_sz = np.clip(self.target_sz, 10, np.tile(image.shape[:2],(self.box_num,1)))
@@ -301,7 +304,7 @@ class TrackerSiamRPN(Tracker):
         # self.target_sz = np.clip(self.target_sz, 10, image.shape[:2])
 
         # update exemplar and instance sizes
-        context = self.cfg.context * np.sum(self.target_sz,axis=1)
+        context = self.cfg.context * np.sum(self.target_sz,axis=1).reshape((-1,1))
         self.z_sz = np.sqrt(np.prod(self.target_sz + context, axis=1))
         self.x_sz = self.z_sz * \
             self.cfg.instance_sz / self.cfg.exemplar_sz
